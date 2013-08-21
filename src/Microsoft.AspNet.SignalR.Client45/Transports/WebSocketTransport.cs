@@ -18,6 +18,9 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
         private CancellationToken _disconnectToken;
         private WebSocketConnectionInfo _connectionInfo;
         private TaskCompletionSource<object> _startTcs;
+        private CancellationTokenSource _webSocketTokenSource;
+        private ClientWebSocket _webSocket;
+        private int _disposed;
 
         public WebSocketTransport()
             : this(new DefaultHttpClient())
@@ -85,15 +88,18 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
             builder.Scheme = builder.Scheme == "https" ? "wss" : "ws";
 
             _connectionInfo.Connection.Trace(TraceLevels.Events, "WS: {0}", builder.Uri);
+ 
+            // TODO: Revisit thread safety of this assignment
+            _webSocketTokenSource = new CancellationTokenSource();
+            _webSocket = new ClientWebSocket();
 
-            var webSocket = new ClientWebSocket();
-            _connectionInfo.Connection.PrepareRequest(new WebSocketWrapperRequest(webSocket));
+            _connectionInfo.Connection.PrepareRequest(new WebSocketWrapperRequest(_webSocket, _connectionInfo.Connection));
 
-            CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(_connectionInfo.CancellationTokenSource.Token, _disconnectToken);
-            CancellationToken token = cts.Token;
+            CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_webSocketTokenSource.Token, _disconnectToken);
+            CancellationToken token = linkedCts.Token;
 
-            await webSocket.ConnectAsync(builder.Uri, token);
-            await ProcessWebSocketRequestAsync(webSocket, token);
+            await _webSocket.ConnectAsync(builder.Uri, token);
+            await ProcessWebSocketRequestAsync(_webSocket, token);
         }
 
         public void Abort(IConnection connection, TimeSpan timeout)
@@ -185,7 +191,10 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
         {
             _connectionInfo.Connection.Trace(TraceLevels.Events, "WS: LostConnection");
 
-            _connectionInfo.CancellationTokenSource.Cancel();
+            if (_webSocketTokenSource != null)
+            {
+                _webSocketTokenSource.Cancel();
+            }
         }
 
         public void Dispose()
@@ -198,7 +207,20 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
         {
             if (disposing)
             {
+                if (_webSocketTokenSource != null)
+                {
+                    // Gracefully close the websocket message loop
+                    _webSocketTokenSource.Cancel();
+                }
                 _abortHandler.Dispose();
+                if (_webSocket != null)
+                    _webSocket.Dispose();
+                }
+
+                if (_webSocketTokenSource != null)
+                {
+                    _webSocketTokenSource.Dispose();
+                }
             }
         }
 
@@ -207,13 +229,11 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
         {
             public IConnection Connection;
             public string Data;
-            public CancellationTokenSource CancellationTokenSource;
 
             public WebSocketConnectionInfo(IConnection connection, string data)
             {
                 Connection = connection;
                 Data = data;
-                CancellationTokenSource = new CancellationTokenSource();
             }
         }
     }
