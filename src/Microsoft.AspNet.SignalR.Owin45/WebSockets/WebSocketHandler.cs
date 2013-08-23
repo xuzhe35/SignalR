@@ -38,7 +38,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
         public virtual void OnClose() { }
 
         // Sends a text message to the client
-        public Task Send(string message)
+        public virtual Task Send(string message)
         {
             if (message == null)
             {
@@ -108,7 +108,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             }
         }
 
-        public WebSocket WebSocket { get; set; }
+        internal WebSocket WebSocket { get; set; }
 
         public Exception Error { get; set; }
 
