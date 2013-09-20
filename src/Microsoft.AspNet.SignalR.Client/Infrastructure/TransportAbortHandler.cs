@@ -12,7 +12,7 @@ namespace Microsoft.AspNet.SignalR.Client.Infrastructure
     public sealed class TransportAbortHandler : IDisposable
     {
         // The abort query string
-        private const string _abortQueryString = "?transport={0}&connectionToken={2}{3}";
+        private const string _abortQueryString = "?transport={0}&connectionToken={1}{2}";
 
         // The transport name
         private readonly string _transportName;

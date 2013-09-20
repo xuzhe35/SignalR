@@ -7,7 +7,7 @@ using Microsoft.AspNet.SignalR.Hosting;
 
 namespace Microsoft.AspNet.SignalR.WebSockets
 {
-    internal class DefaultWebSocketHandler : WebSocketHandler, IWebSocket
+    public class DefaultWebSocketHandler : WebSocketHandler, IWebSocket
     {
         // 64KB default max incoming message size
         private const int _maxIncomingMessageSize = 64 * 1024;

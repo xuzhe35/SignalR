@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.WebSockets;
 using Moq;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Microsoft.AspNet.SignalR.Tests.Owin
 {
@@ -158,7 +159,7 @@ namespace Microsoft.AspNet.SignalR.Tests.Owin
                      .Returns(Task.FromResult(new WebSocketReceiveResult(0, WebSocketMessageType.Close, endOfMessage: true)));
 
             await handler.ProcessWebSocketRequestAsync(initialWebSocket.Object, CancellationToken.None);
-            
+
             // Swap the socket here so we can verify what happens after the task returns
             var afterWebSocket = new Mock<WebSocket>();
 
@@ -170,5 +171,6 @@ namespace Microsoft.AspNet.SignalR.Tests.Owin
             afterWebSocket.Verify(m => m.State, Times.Never());
             afterWebSocket.Verify(m => m.SendAsync(It.IsAny<ArraySegment<byte>>(), WebSocketMessageType.Text, true, CancellationToken.None), Times.Never());
             afterWebSocket.Verify(m => m.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None), Times.Never());
+        }
     }
 }

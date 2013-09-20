@@ -48,7 +48,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             return SendAsync(message);
         }
 
-        internal Task SendAsync(string message)
+        public Task SendAsync(string message)
         {
             var buffer = Encoding.UTF8.GetBytes(message);
             return SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text);
@@ -77,7 +77,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             sendContext);
         }
 
-        public Task CloseAsync()
+        public virtual Task CloseAsync()
         {
             if (IsClosedOrClosedSent(WebSocket))
             {
@@ -108,7 +108,7 @@ namespace Microsoft.AspNet.SignalR.WebSockets
             }
         }
 
-        internal WebSocket WebSocket { get; set; }
+        public WebSocket WebSocket { get; set; }
 
         public Exception Error { get; set; }
 
