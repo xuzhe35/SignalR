@@ -97,6 +97,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="2.1.0\readme.html" />
     <Content Include="clientaccesspolicy.xml" />
     <Content Include="ClientBin\Microsoft.AspNet.SignalR.Client.Silverlight.Samples.xap" />
     <Content Include="Content\bg-body.jpg" />
@@ -246,6 +247,9 @@
     <Compile Include="..\..\tests\Microsoft.AspNet.SignalR.Tests.Common\Connections\AuthenticatedEchoConnection.cs">
       <Link>Connections\AuthenticatedEchoConnection.cs</Link>
     </Compile>
+    <Compile Include="2.1.0\Hubs\ITaskScheduler.cs" />
+    <Compile Include="2.1.0\Hubs\TaskSchedulerHub.cs" />
+    <Compile Include="2.1.0\Hubs\ITaskAgent.cs" />
     <Compile Include="App_Start\BackgroundThread.cs" />
     <Compile Include="App_Start\Startup.SignalR.cs" />
     <Compile Include="App_Start\Startup.cs" />

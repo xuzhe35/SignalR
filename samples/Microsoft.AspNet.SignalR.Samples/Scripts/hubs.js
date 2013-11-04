@@ -639,6 +639,22 @@
              }
         };
 
+        proxies.taskSchedulerHub = this.createHubProxy('taskSchedulerHub'); 
+        proxies.taskSchedulerHub.client = { };
+        proxies.taskSchedulerHub.server = {
+            assignMeLongRunningTask: function (duration) {
+            /// <summary>Calls the AssignMeLongRunningTask method on the server-side TaskSchedulerHub hub.&#10;Returns a jQuery.Deferred() promise.</summary>
+            /// <param name=\"duration\" type=\"Object\">Server side type is System.TimeSpan</param>
+                return proxies.taskSchedulerHub.invoke.apply(proxies.taskSchedulerHub, $.merge(["AssignMeLongRunningTask"], $.makeArray(arguments)));
+             },
+
+            assignMeShortRunningTask: function (duration) {
+            /// <summary>Calls the AssignMeShortRunningTask method on the server-side TaskSchedulerHub hub.&#10;Returns a jQuery.Deferred() promise.</summary>
+            /// <param name=\"duration\" type=\"Object\">Server side type is System.TimeSpan</param>
+                return proxies.taskSchedulerHub.invoke.apply(proxies.taskSchedulerHub, $.merge(["AssignMeShortRunningTask"], $.makeArray(arguments)));
+             }
+        };
+
         proxies.testHub = this.createHubProxy('testHub'); 
         proxies.testHub.client = { };
         proxies.testHub.server = {

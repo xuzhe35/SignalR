@@ -54,6 +54,13 @@
     <Compile Include="..\Common\CommonClient.cs">
       <Link>CommonClient.cs</Link>
     </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Samples\2.1.0\Hubs\ITaskAgent.cs">
+      <Link>2.1.0\ITaskAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Samples\2.1.0\Hubs\ITaskScheduler.cs">
+      <Link>2.1.0\ITaskScheduler.cs</Link>
+    </Compile>
+    <Compile Include="2.1.0\TaskClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
