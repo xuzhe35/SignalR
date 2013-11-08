@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+  InitialTargets="Header"
+  DefaultTargets="Build">
+  
+  <Import Project="$(BUILD_SYSTEM_PATH)\build.targets" />
+  <UsingTask TaskName="StartIISTask" AssemblyFile="$(TEST_DIR)Microsoft.AspNet.SignalR.Tests.Common\Microsoft.AspNet.SignalR.Tests.Common.dll" />
+  
+  <PropertyGroup>
+    <!-- $(MSBuildCommunityTasksPath) is used by MSBuild.Community.Tasks.Targets to find the right dll -->
+    <MSBuildCommunityTasksPath>$(BASE_DIR)build</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="$(BASE_DIR)build\MSBuild.Community.Tasks.Targets" />
+
+  <PropertyGroup>
+    <PROJECT>SignalR</PROJECT>
+    <VERSION>2.1.0-pre</VERSION>
+    <FINAL_MILESTONE>True</FINAL_MILESTONE>
+
+    <LICENSE_URL>https://raw.github.com/SignalR/SignalR/master/LICENSE.md</LICENSE_URL>
+    <PROJECT_URL>http://www.asp.net/signalr</PROJECT_URL>
+    <COPYRIGHT>Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.</COPYRIGHT>
+    <TAGS>Microsoft AspNet SignalR AspNetSignalR</TAGS>
+
+    <EXTRA_MSBUILD_PROPERTIES>SolutionDir=$(BASE_DIR);COMPILE_DIR=$(COMPILE_DIR)</EXTRA_MSBUILD_PROPERTIES>
+
+    <JSTestProject>Microsoft.AspNet.SignalR.Client.JS.Tests</JSTestProject>
+    <JSTestsPath>$(TEST_DIR)$(JSTestProject)\</JSTestsPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NUGET_PROPERTIES Include="katanaVersion">
+        <Value>2.0.0-rtw</Value>
+    </NUGET_PROPERTIES>
+    <NUGET_PROPERTIES Include="authors">
+        <Value>Microsoft</Value>
+    </NUGET_PROPERTIES>
+    <NUGET_PROPERTIES Include="licenseUrl;clientLicenseUrl">
+        <Value>https://raw.github.com/SignalR/SignalR/master/LICENSE.md</Value>
+    </NUGET_PROPERTIES>
+    <NUGET_PROPERTIES Include="projectUrl">
+        <Value>http://www.asp.net/signalr</Value>
+    </NUGET_PROPERTIES>
+    <NUGET_PROPERTIES Include="copyright">
+        <Value>Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.</Value>
+    </NUGET_PROPERTIES>
+    <NUGET_PROPERTIES Include="tags">
+        <Value>Microsoft AspNet SignalR AspNetSignalR</Value>
+    </NUGET_PROPERTIES>
+
+    <COMPILE_PROJECTS 
+      Include="$(BASE_DIR)src\**\*.csproj" 
+      Exclude="$(BASE_DIR)src\**\*.Android.csproj;
+               $(BASE_DIR)src\**\*.iOS.csproj">
+      <DestinationFolder>$(COMPILE_DIR)%(Filename)</DestinationFolder>
+    </COMPILE_PROJECTS>
+
+    <ANALYZE_PROJECTS
+      Include="@(COMPILE_PROJECTS)"
+      Exclude="$(BASE_DIR)src\**\*.JS.csproj;
+               $(BASE_DIR)src\**\*.Portable.csproj;
+               $(BASE_DIR)src\**\*.SystemWeb.csproj;
+               $(BASE_DIR)src\**\*.Crank.csproj;
+               $(BASE_DIR)src\**\*.Stress.csproj">
+      <DestinationFolder>$(ANALYZE_DIR)%(Filename)</DestinationFolder>
+    </ANALYZE_PROJECTS>
+
+    <TEST_PROJECTS 
+      Include="$(BASE_DIR)tests\**\*.FunctionalTests.csproj"> 
+      <!-- ISSExpressTestHost and SiteManager expect dlls to be in a bin directory -->
+      <DestinationFolder>$(TEST_DIR)%(Filename)\bin</DestinationFolder>
+    </TEST_PROJECTS>
+    <TEST_PROJECTS 
+      Include="$(BASE_DIR)tests\**\*.csproj"
+      Exclude="@(TEST_PROJECTS);$(BASE_DIR)tests\**\*JS.Tests.csproj">
+      <DestinationFolder>$(TEST_DIR)%(Filename)</DestinationFolder>
+    </TEST_PROJECTS>
+  </ItemGroup>
+
+  <Target Name="TestCompile:Chutzpah" BeforeTargets="TestCompile">
+    <MSBuild Projects="$(BASE_DIR)tests\$(JSTestProject)\$(JSTestProject).csproj"
+         Targets="pipelinePreDeployCopyAllFilesToOneFolder"
+         Properties="Configuration=Debug;_PackageTempDir=$(JSTestsPath);AutoParameterizationWebConfigConnectionStrings=false;$(EXTRA_MSBUILD_PROPERTIES)" />
+  </Target>
+
+  <Target Name="Test:Chutzpah" BeforeTargets="Test" DependsOnTargets="Compile;TestCompile">
+    <PropertyGroup>
+      <ChutzpahExePath>$(BASE_DIR)tools\chutzpah\chutzpah.console.exe</ChutzpahExePath>
+	  <JSTestsURL>http://localhost:1337/</JSTestsURL>
+      <JSTester>$(JSTestsURL)default.html</JSTester>
+    </PropertyGroup>
+    
+    <!-- Allow a single JS test script to be run by specifying the script via the JSTestScript property.
+         Ex: MSBuild.exe .\build\Build.proj /t:RunUnitTests /p:"JSTestScript=Tests/FunctionalTests/Common/AjaxSendFacts.js" -->
+    <FileUpdate Files="$(JSTestsPath)default.html" Regex="&lt;!-- ##JS## --&gt;((.|\r|\n)*?)&lt;!-- ##JS## --&gt;" ReplacementText="&lt;!-- ##JS## --&gt;&lt;script type='text/javascript' src='$(JSTestScript)'&gt;&lt;/script&gt;&lt;!-- ##JS## --&gt;" Condition="'$(JSTestScript)' != ''" />
+    <FileUpdate Files="$(JSTestsPath)Build\test.config.js" Regex="/\*CMDLineTest\*/(.*?)/\*CMDLineTest\*/" ReplacementText="/*CMDLineTest*/true/*CMDLineTest*/" />
+    
+    <StartIISTask HostLocation="$(JSTestsPath)" />
+
+    <!-- Debugging is required in order to pump data from phantomjs to TeamCity -->
+    <Exec Command="&quot;$(ChutzpahExePath)&quot; &quot;$(JSTester)&quot; /silent /timeoutMilliseconds 30000" />
+
+    <CallTarget Targets="KillIISExpress" />
+    <OnError ExecuteTargets="KillIISExpress" />
+  </Target>
+
+  <Target Name="IntegrationTest:XUnit" BeforeTargets="IntegrationTest" DependsOnTargets="TestCompile">
+    <ItemGroup>
+      <XUnitFunctionalTestAssembly Include="$(TEST_DIR)**\*.FunctionalTests.dll" />
+    </ItemGroup>
+    <XUnitRunner 
+      Condition="'@(XUnitFunctionalTestAssembly)' != ''"
+      TestFile="%(XUnitFunctionalTestAssembly.FullPath)" />
+
+    <CallTarget Targets="KillIISExpress" />
+    <OnError ExecuteTargets="KillIISExpress" />
+  </Target>
+
+  <Target Name="PreparePackage:VersionJS" BeforeTargets="PreparePackage" DependsOnTargets="Compile">
+    <Copy SourceFiles="$(COMPILE_DIR)Microsoft.AspNet.SignalR.Client.JS\jquery.signalR.js;
+                       $(COMPILE_DIR)Microsoft.AspNet.SignalR.Client.JS\jquery.signalR.min.js"
+          DestinationFiles="$(COMPILE_DIR)Microsoft.AspNet.SignalR.Client.JS\jquery.signalR-$(VERSION).js;
+                            $(COMPILE_DIR)Microsoft.AspNet.SignalR.Client.JS\jquery.signalR-$(VERSION).min.js" />
+  </Target>
+  
+  
+  <Target Name="PreparePackage:FindNuspecs" BeforeTargets="PreparePackage" DependsOnTargets="Compile">
+    <ItemGroup>
+      <!-- Metapackages and the JS client don't need symbols -->
+      <PackageNugetFile Include="$(BASE_DIR)nuspecs\*.nuspec;$(COMPILE_DIR)**\*.JS.nuspec">
+        <Symbols>false</Symbols>
+      </PackageNugetFile>
+      
+      <PackageNugetFile Include="$(COMPILE_DIR)**\*.nuspec" Exclude="@(PackageNugetFile)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Targets used to cleanup after running IIS Express -->
+  <Target Name="KillIISExpress">
+    <Exec Command="taskkill /IM iisexpress.exe /F" ContinueOnError="true" />
+    <CallTarget Targets="ClearAspNetTempFolder" />
+  </Target>
+  <Target Name="ClearAspNetTempFolder">
+    <RemoveDir Directories="C:\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\root" ContinueOnError="true" />
+    <RemoveDir Directories="C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files\root" ContinueOnError="true" />
+  </Target>
+</Project>

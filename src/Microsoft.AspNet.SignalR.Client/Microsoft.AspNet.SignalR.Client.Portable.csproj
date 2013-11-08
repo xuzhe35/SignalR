@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{47B3F28E-76DB-40BD-A8F5-800CF08D84ED}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.AspNet.SignalR.Client</RootNamespace>
+    <AssemblyName>Microsoft.AspNet.SignalR.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <BaseIntermediateOutputPath>obj\portable\</BaseIntermediateOutputPath>
+    <OutputPath>bin\portable\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\portable\Debug\Microsoft.AspNet.SignalR.Client.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <BaseIntermediateOutputPath>obj\portable\</BaseIntermediateOutputPath>
+    <OutputPath>bin\portable\Release\</OutputPath>
+    <DefineConstants>TRACE;PORTABLE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\portable\Release\Microsoft.AspNet.SignalR.Client.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\CommonVersionInfo.cs">
+      <Link>Properties\CommonVersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Http\DefaultHttpClient.cs" />
+    <Compile Include="Http\DefaultHttpClient45.cs" />
+    <Compile Include="Http\DefaultHttpHandler.cs" />
+    <Compile Include="Http\HttpRequestMessageWrapper.cs" />
+    <Compile Include="Http\HttpResponseMessageWrapper.cs" />
+    <Compile Include="Infrastructure\HttpClientException.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="ConnectionExtensions.cs" />
+    <Compile Include="ConnectionState.cs" />
+    <Compile Include="HeaderDictionary.cs" />
+    <Compile Include="HeartBeatMonitor.cs" />
+    <Compile Include="Http\IHttpClient.cs" />
+    <Compile Include="Http\IHttpClientExtensions.cs" />
+    <Compile Include="Http\IRequest.cs" />
+    <Compile Include="Http\IResponse.cs" />
+    <Compile Include="Http\IResponseExtensions.cs" />
+    <Compile Include="HubConnection.cs" />
+    <Compile Include="HubException.cs" />
+    <Compile Include="HubProxyExtensions.cs" />
+    <Compile Include="Hubs\HubInvocation.cs" />
+    <Compile Include="Hubs\HubProgressUpdate.cs" />
+    <Compile Include="Hubs\HubProxy.cs" />
+    <Compile Include="Hubs\HubRegistrationData.cs" />
+    <Compile Include="Hubs\HubResult.cs" />
+    <Compile Include="Hubs\Hubservable.cs" />
+    <Compile Include="Hubs\IHubConnection.cs" />
+    <Compile Include="Hubs\Subscription.cs" />
+    <Compile Include="IConnection.cs" />
+    <Compile Include="IHubProxy.cs" />
+    <Compile Include="Infrastructure\ErrorExtensions.cs" />
+    <Compile Include="Infrastructure\ExceptionHelper.cs" />
+    <Compile Include="Infrastructure\SignalRError.cs" />
+    <Compile Include="Infrastructure\TransportAbortHandler.cs" />
+    <Compile Include="Infrastructure\TransportInitializationHandler.cs" />
+    <Compile Include="Infrastructure\StreamExtensions.cs" />
+    <Compile Include="Infrastructure\ThreadSafeInvoker.cs" />
+    <Compile Include="KeepAliveData.cs" />
+    <Compile Include="NegotiationResponse.cs" />
+    <Compile Include="ObservableConnection.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StateChange.cs" />
+    <Compile Include="TraceLevels.cs" />
+    <Compile Include="Transports\AsyncStreamReader.cs" />
+    <Compile Include="Transports\AutoTransport.cs" />
+    <Compile Include="Transports\HttpBasedTransport.cs" />
+    <Compile Include="Transports\IClientTransport.cs" />
+    <Compile Include="Transports\LongPollingTransport.cs" />
+    <Compile Include="Transports\LongPolling\NegotiateInitializer.cs" />
+    <Compile Include="Transports\LongPolling\PollingRequestHandler.cs" />
+    <Compile Include="Transports\ServerSentEventsTransport.cs" />
+    <Compile Include="Transports\ServerSentEvents\ChunkBuffer.cs" />
+    <Compile Include="Transports\ServerSentEvents\EventSourceStreamReader.cs" />
+    <Compile Include="Transports\ServerSentEvents\EventType.cs" />
+    <Compile Include="Transports\ServerSentEvents\SseEvent.cs" />
+    <Compile Include="Transports\TransportHelper.cs" />
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Infrastructure\CancellationTokenExtensions.cs">
+      <Link>Infrastructure\CancellationTokenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Infrastructure\DisposableAction.cs">
+      <Link>Infrastructure\DisposableAction.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Infrastructure\Disposer.cs">
+      <Link>Infrastructure\Disposer.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Infrastructure\ExceptionsExtensions.cs">
+      <Link>Infrastructure\ExceptionsExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Infrastructure\TaskQueue.cs">
+      <Link>Infrastructure\TaskQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\Owin\Infrastructure\ByteBuffer.cs">
+      <Link>Infrastructure\ByteBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\Microsoft.AspNet.SignalR.Core\TaskAsyncHelper.cs">
+      <Link>Infrastructure\TaskAsyncHelper.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\portable-net40+sl4+wp7+win8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\portable-net40+sl4+win8+wp71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\portable-net40+sl4+win8+wp71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\portable-net40+sl4+win8+wp71\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\portable-net40+sl5+win8+wp8\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\portable-net40+sl5+win8+wp8\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="..\Common\Microsoft.AspNet.SignalR.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\build\Microsoft.Bcl.Build.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

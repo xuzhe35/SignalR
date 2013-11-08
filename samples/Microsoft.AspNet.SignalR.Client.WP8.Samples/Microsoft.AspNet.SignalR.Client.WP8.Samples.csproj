@@ -156,7 +156,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Client.Portable\Microsoft.AspNet.SignalR.Client.Portable.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Client\Microsoft.AspNet.SignalR.Client.Portable.csproj">
       <Project>{47B3F28E-76DB-40BD-A8F5-800CF08D84ED}</Project>
       <Name>Microsoft.AspNet.SignalR.Client.Portable</Name>
     </ProjectReference>

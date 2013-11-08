@@ -143,7 +143,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Client.Portable\Microsoft.AspNet.SignalR.Client.Portable.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Client\Microsoft.AspNet.SignalR.Client.Portable.csproj">
       <Project>{47b3f28e-76db-40bd-a8f5-800cf08d84ed}</Project>
       <Name>Microsoft.AspNet.SignalR.Client.Portable</Name>
     </ProjectReference>

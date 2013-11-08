@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>$id$</id>
-    <title>Microsoft ASP.NET SignalR Self Host</title>
+    <title>Microsoft ASP.NET SignalR Service Bus Messaging Backplane</title>
     <version>$version$</version>
     <authors>$authors$</authors>
     <owners>$authors$</owners>
@@ -10,19 +10,17 @@
     <copyright>$copyright$</copyright>
     <projectUrl>$projectUrl$</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>This package includes the required dependencies for self-hosting SignalR in a process outside of IIS using OWIN and HTTPListener.</description>
+    <description>Service Bus messaging backplane for scaling out of ASP.NET SignalR applications in a web-farm.</description>
     <language>en-US</language>
-    <tags>$tags$ SelfHost</tags>
+    <tags>$tags$ ServiceBus</tags>
     <releaseNotes>https://github.com/SignalR/SignalR/releases</releaseNotes>
     <dependencies>
       <dependency id="Microsoft.AspNet.SignalR.Core" version="$version$" />
-      <dependency id="Microsoft.Owin.SelfHost" version="$katanaVersion$" />
+      <dependency id="WindowsAzure.ServiceBus" version="2.1.0" />
     </dependencies>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System" targetFramework="net40" />
-    </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\readmes\selfhostreadme.txt" target="readme.txt" />
+    <file src="Microsoft.AspNet.SignalR.ServiceBus.dll" target="lib\net45" />
+    <file src="Microsoft.AspNet.SignalR.ServiceBus.xml" target="lib\net45" />
   </files>
 </package>

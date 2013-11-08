@@ -14,7 +14,7 @@ namespace Microsoft.AspNet.SignalR.Client.Http
     /// The default <see cref="IHttpClient"/> implementation.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:Implement IDisposable", Justification = "Response task returned to the caller so cannot dispose Http Client")]
-    public class DefaultHttpClient : IHttpClient
+    public class DefaultHttpClient45 : IHttpClient
     {
         private HttpClient _longRunningClient;
         private HttpClient _shortRunningClient;

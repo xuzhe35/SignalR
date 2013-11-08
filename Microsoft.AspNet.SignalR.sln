@@ -54,13 +54,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.FunctionalTests", "tests\Microsoft.AspNet.SignalR.FunctionalTests\Microsoft.AspNet.SignalR.FunctionalTests.csproj", "{819038AC-6770-48DB-B9FA-F1245C87C341}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client45", "src\Microsoft.AspNet.SignalR.Client45\Microsoft.AspNet.SignalR.Client45.csproj", "{50F8A174-695E-498C-B105-BDBE6B398646}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client45", "src\Microsoft.AspNet.SignalR.Client\Microsoft.AspNet.SignalR.Client45.csproj", "{50F8A174-695E-498C-B105-BDBE6B398646}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Utils", "src\Microsoft.AspNet.SignalR.Utils\Microsoft.AspNet.SignalR.Utils.csproj", "{990B347D-F5BF-4F94-9967-D98D24ACEA43}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Crank", "src\Microsoft.AspNet.SignalR.Crank\Microsoft.AspNet.SignalR.Crank.csproj", "{2E0CF0DC-E6E4-4928-ABA3-E3300CEEAE91}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client.WinRT", "src\Microsoft.AspNet.SignalR.Client.WinRT\Microsoft.AspNet.SignalR.Client.WinRT.csproj", "{0D2276D4-E912-46A4-8A06-59C4B8A537FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Tests.Common", "tests\Microsoft.AspNet.SignalR.Tests.Common\Microsoft.AspNet.SignalR.Tests.Common.csproj", "{F18A8896-10BD-469E-9AA1-AEBACEF4D7B7}"
 EndProject
@@ -78,7 +76,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SelfHost.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client40.Samples", "samples\Microsoft.AspNet.SignalR.Client40.Samples\Microsoft.AspNet.SignalR.Client40.Samples.csproj", "{2B6F3C11-DE35-4948-A49F-A6C65A297C86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client.Portable", "src\Microsoft.AspNet.SignalR.Client.Portable\Microsoft.AspNet.SignalR.Client.Portable.csproj", "{47B3F28E-76DB-40BD-A8F5-800CF08D84ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client.Portable", "src\Microsoft.AspNet.SignalR.Client\Microsoft.AspNet.SignalR.Client.Portable.csproj", "{47B3F28E-76DB-40BD-A8F5-800CF08D84ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNet.SignalR.Client.Silverlight.Samples", "samples\Microsoft.AspNet.SignalR.Client.Silverlight.Samples\Microsoft.AspNet.SignalR.Client.Silverlight.Samples.csproj", "{3DCD7F29-E221-45B6-8C0C-881D931946E9}"
 EndProject

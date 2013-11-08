@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <title>Microsoft ASP.NET SignalR Sample</title>
+    <version>$version$</version>
+    <authors>$authors$</authors>
+    <owners>$authors$</owners>
+    <licenseUrl>$licenseUrl$</licenseUrl>
+    <copyright>$copyright$</copyright>
+    <projectUrl>$projectUrl$</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Foo</description>
+    <language>en-US</language>
+    <tags>$tags$ Sample</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.SignalR" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files />
+</package>

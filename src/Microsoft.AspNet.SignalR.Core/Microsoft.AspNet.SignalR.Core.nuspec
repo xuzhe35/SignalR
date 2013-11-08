@@ -1,0 +1,28 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <title>Microsoft ASP.NET SignalR Core Components</title>
+    <version>$version$</version>
+    <authors>$authors$</authors>
+    <owners>$authors$</owners>
+    <licenseUrl>$licenseUrl$</licenseUrl>
+    <copyright>$copyright$</copyright>
+    <projectUrl>$projectUrl$</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Core server components for ASP.NET SignalR.</description>
+    <language>en-US</language>
+    <tags>$tags$ Core</tags>
+    <releaseNotes>https://github.com/SignalR/SignalR/releases</releaseNotes>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="5.0.0" />
+      <dependency id="Owin" version="1.0" />
+      <dependency id="Microsoft.Owin" version="$katanaVersion$" />
+      <dependency id="Microsoft.Owin.Security" version="$katanaVersion$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Microsoft.AspNet.SignalR.Core.dll" target="lib\net45" />
+    <file src="Microsoft.AspNet.SignalR.Core.xml" target="lib\net45" />
+  </files>
+</package>

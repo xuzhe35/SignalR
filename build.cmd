@@ -1,10 +1,45 @@
-@echo Off
-set target=%1
-if "%target%" == "" (
-   set target=BuildCmd
+@echo off
+cd %~dp0
+
+IF "%BUILD_SYSTEM_VERSION%" == "" (
+  SET BUILD_SYSTEM_VERSION=0.1.0
 )
-set config=%2
-if "%config%" == "" (
-   set config=Debug
+
+SET BUILD_SYSTEM_PATH=packages\BuildCore.%BUILD_SYSTEM_VERSION%\tools
+
+
+:::: Download NuGet.exe
+
+IF EXIST .nuget\NuGet.exe GOTO after_download_nuget
+echo Downloading latest version of NuGet.exe...
+mkdir .nuget
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadFile('https://nuget.org/nuget.exe', '.nuget\NuGet.exe'))"
+:after_download_nuget
+
+
+:::: Download BuildCore.nupkg
+
+SET EnableNuGetPackageRestore=true
+IF EXIST %HOMEDRIVE%%HOMEPATH%\.nuget\BuildCore.%BUILD_SYSTEM_VERSION%.nupkg (
+
+  :::: Local "build install" copy of BuildCode.nupkg is always used if it exists
+  DEL /S /Q packages\BuildCore.%BUILD_SYSTEM_VERSION%
+  .nuget\NuGet.exe install BuildCore -version %BUILD_SYSTEM_VERSION% -o packages -Source %HOMEDRIVE%%HOMEPATH%\.nuget
+
+) ELSE (
+
+  :::: Otherwise restore from default sources
+  .nuget\NuGet.exe install BuildCore -version %BUILD_SYSTEM_VERSION% -o packages
+
 )
-msbuild Build\Build.proj /t:"%target%" /p:Configuration="%config%" /m /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false
+
+
+:::: Running build.proj
+
+msbuild %BUILD_SYSTEM_PATH%\tasks\_prepare.proj
+
+IF "%1" == "" (
+  msbuild build.proj 
+) ELSE (
+  msbuild build.proj /t:%*
+)
