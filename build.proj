@@ -4,7 +4,7 @@
   DefaultTargets="Build">
   
   <Import Project="$(BUILD_SYSTEM_PATH)\build.targets" />
-  <UsingTask TaskName="StartIISTask" AssemblyFile="$(TEST_DIR)Microsoft.AspNet.SignalR.Tests.Common\Microsoft.AspNet.SignalR.Tests.Common.dll" />
+  <Import Project="$(BASE_DIR)build.tasks" />
   
   <PropertyGroup>
     <!-- $(MSBuildCommunityTasksPath) is used by MSBuild.Community.Tasks.Targets to find the right dll -->
@@ -123,7 +123,6 @@
                             $(COMPILE_DIR)Microsoft.AspNet.SignalR.Client.JS\jquery.signalR-$(VERSION).min.js" />
   </Target>
   
-  
   <Target Name="PreparePackage:FindNuspecs" BeforeTargets="PreparePackage" DependsOnTargets="Compile">
     <ItemGroup>
       <!-- Metapackages and the JS client don't need symbols -->
@@ -133,6 +132,41 @@
       
       <PackageNugetFile Include="$(COMPILE_DIR)**\*.nuspec" Exclude="@(PackageNugetFile)" />
     </ItemGroup>
+  </Target>
+  
+  <Target Name="UpdateVersion">
+    <PropertyGroup>
+      <PackageVersion>$(VERSION)</PackageVersion>
+      <AssemblyVersion Condition="$(VERSION.IndexOf('-')) != -1">$(VERSION.Substring(0, $(VERSION.IndexOf('-'))))</AssemblyVersion>
+      <AssemblyVersion Condition="$(VERSION.IndexOf('-')) == -1">$(VERSION)</AssemblyVersion>
+    </PropertyGroup> 
+    <ItemGroup>
+      <RegexTransform Include="$(BASE_DIR)src\Common\CommonVersionInfo.cs">
+        <Find>AssemblyVersion\("\d+\.\d+\.\d+"\)</Find>
+        <ReplaceWith>AssemblyVersion("$(AssemblyVersion)")</ReplaceWith>
+      </RegexTransform>
+      <RegexTransform Include="$(BASE_DIR)src\Common\CommonVersionInfo.cs">
+        <Find>AssemblyInformationalVersion\("\d+\.\d+\.\d+(-\w+\d*(-\d+)?)?"\)</Find>
+        <ReplaceWith>AssemblyInformationalVersion("$(PackageVersion)")</ReplaceWith>
+      </RegexTransform>
+      <RegexTransform Include="$(BASE_DIR)src\Microsoft.AspNet.SignalR.Client\Connection.cs">
+        <Find>_assemblyVersion = new Version\("\d+\.\d+\.\d+"\)</Find>
+        <ReplaceWith>_assemblyVersion = new Version("$(AssemblyVersion)")</ReplaceWith>
+      </RegexTransform>
+      <RegexTransform Include="$(BASE_DIR)src\Microsoft.AspNet.SignalR.Client.JS\jquery.signalR.core.js">
+        <Find>SignalR JavaScript Library v\d+\.\d+\.\d+(-\w+\d*(-\d+)?)?</Find>
+        <ReplaceWith>SignalR JavaScript Library v$(PackageVersion)</ReplaceWith>
+      </RegexTransform>
+      <RegexTransform Include="$(BASE_DIR)src\Microsoft.AspNet.SignalR.Client.JS\jquery.signalR.version.js">
+        <Find>\$\.signalR\.version = "\d+\.\d+\.\d+(-\w+\d*(-\d+)?)?";</Find>
+        <ReplaceWith>$.signalR.version = "$(PackageVersion)";</ReplaceWith>
+      </RegexTransform>
+      <RegexTransform Include="$(BASE_DIR)src\Microsoft.AspNet.SignalR.Core\Scripts\hubs.js">
+        <Find>SignalR JavaScript Library v\d+\.\d+\.\d+(-\w+\d*(-\d+)?)?</Find>
+        <ReplaceWith>SignalR JavaScript Library v$(PackageVersion)</ReplaceWith>
+      </RegexTransform>
+    </ItemGroup>
+    <RegexTransform Items="@(RegexTransform)" />
   </Target>
 
   <!-- Targets used to cleanup after running IIS Express -->
