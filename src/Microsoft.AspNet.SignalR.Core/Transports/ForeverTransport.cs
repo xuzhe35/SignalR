@@ -60,8 +60,6 @@ namespace Microsoft.AspNet.SignalR.Transports
             get { return _jsonSerializer; }
         }
 
-        internal TaskCompletionSource<object> InitializeTcs { get; set; }
-
         protected virtual void OnSending(string payload)
         {
             Heartbeat.MarkConnection(this);
@@ -85,16 +83,6 @@ namespace Microsoft.AspNet.SignalR.Transports
         internal Action BeforeCancellationTokenCallbackRegistered;
         internal Action BeforeReceive;
         internal Action<Exception> AfterRequestEnd;
-
-        protected override void InitializePersistentState()
-        {
-            // PersistentConnection.OnConnected must complete before we can write to the output stream,
-            // so clients don't indicate the connection has started too early.
-            InitializeTcs = new TaskCompletionSource<object>();
-            WriteQueue = new TaskQueue(InitializeTcs.Task);
-
-            base.InitializePersistentState();
-        }
 
         protected Task ProcessRequestCore(ITransportConnection connection)
         {
@@ -134,23 +122,6 @@ namespace Microsoft.AspNet.SignalR.Transports
         {
             return TaskAsyncHelper.Empty;
         }
-
-        protected internal override Task EnqueueOperation(Func<object, Task> writeAsync, object state)
-        {
-            Task task = base.EnqueueOperation(writeAsync, state);
-
-            // If PersistentConnection.OnConnected has not completed (as indicated by InitializeTcs),
-            // the queue will be blocked to prevent clients from prematurely indicating the connection has
-            // started, but we must keep receive loop running to continue processing commands and to
-            // prevent deadlocks caused by waiting on ACKs.
-            if (InitializeTcs == null || InitializeTcs.Task.IsCompleted)
-            {
-                return task;
-            }
-
-            return TaskAsyncHelper.Empty;
-        }
-
         private async Task ProcessSendRequest()
         {
             INameValueCollection form = await Context.Request.ReadForm();
@@ -255,19 +226,10 @@ namespace Microsoft.AspNet.SignalR.Transports
                 }
 
                 // Ensure delegate continues to use the C# Compiler static delegate caching optimization.
-                initialize().Then(tcs => tcs.TrySetResult(null), InitializeTcs)
-                            .Catch((ex, state) => OnError(ex, state), messageContext);
-            }
-            catch (OperationCanceledException ex)
-            {
-                InitializeTcs.TrySetCanceled();
-
-                lifetime.Complete(ex);
+                initialize().Catch((ex, state) => OnError(ex, state), messageContext);
             }
             catch (Exception ex)
             {
-                InitializeTcs.TrySetCanceled();
-
                 lifetime.Complete(ex);
             }
 
@@ -353,9 +315,6 @@ namespace Microsoft.AspNet.SignalR.Transports
             var context = (MessageContext)state;
 
             context.Transport.IncrementErrors();
-
-            // Cancel any pending writes in the queue
-            context.Transport.InitializeTcs.TrySetCanceled();
 
             // Complete the http request
             context.Lifetime.Complete(ex);

@@ -69,6 +69,9 @@ namespace Microsoft.AspNet.SignalR.Transports
             _heartbeat = heartbeat;
             _counters = performanceCounterManager;
 
+            // Create the TCS that completes when the task returned by PersistentConnection.OnConnected does.
+            _connectTcs = new TaskCompletionSource<object>();
+
             // Queue to protect against overlapping writes to the underlying response stream
             WriteQueue = new TaskQueue();
 
@@ -330,9 +333,6 @@ namespace Microsoft.AspNet.SignalR.Transports
             _hostShutdownToken = _context.Environment.GetShutdownToken();
 
             _requestLifeTime = new HttpRequestLifeTime(this, WriteQueue, Trace, ConnectionId);
-
-            // Create the TCS that completes when the task returned by PersistentConnection.OnConnected does.
-            _connectTcs = new TaskCompletionSource<object>();
 
             // Create a token that represents the end of this connection's life
             _connectionEndTokenSource = new SafeCancellationTokenSource();
