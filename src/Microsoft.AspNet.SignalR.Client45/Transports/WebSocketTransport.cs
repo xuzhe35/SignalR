@@ -117,7 +117,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
             builder.Scheme = builder.Scheme == "https" ? "wss" : "ws";
 
             _connectionInfo.Connection.Trace(TraceLevels.Events, "WS Connecting to: {0}", builder.Uri);
- 
+
             // TODO: Revisit thread safety of this assignment
             _webSocketTokenSource = new CancellationTokenSource();
             _webSocket = new ClientWebSocket();
@@ -169,7 +169,7 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
 
             if (disconnected && !_disconnectToken.IsCancellationRequested)
             {
-                _connectionInfo.Connection.Stop();
+                _connectionInfo.Connection.Disconnect();
             }
         }
 

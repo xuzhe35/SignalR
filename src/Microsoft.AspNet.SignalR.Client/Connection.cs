@@ -595,8 +595,6 @@ namespace Microsoft.AspNet.SignalR.Client
                 // Dispose the heart beat monitor so we don't fire notifications when waiting to abort
                 _monitor.Dispose();
 
-                _transport.Abort(this, timeout, _connectionData);
-
                 Disconnect();
             }
         }
@@ -607,11 +605,19 @@ namespace Microsoft.AspNet.SignalR.Client
         /// </summary>
         void IConnection.Disconnect()
         {
-            Disconnect();
+            Disconnect(false);
         }
 
-        private void Disconnect()
+        private void Disconnect(bool notifyServer = true)
         {
+            if (notifyServer)
+            {
+                lock (_startLock)
+                {
+                    _transport.Abort(this, DefaultAbortTimeout, _connectionData);
+                }
+            }
+
             lock (_stateLock)
             {
                 // Do nothing if the connection is offline
@@ -656,6 +662,7 @@ namespace Microsoft.AspNet.SignalR.Client
                     OnClosed();
                 }
             }
+
         }
 
         protected virtual void OnClosed()
@@ -790,7 +797,7 @@ namespace Microsoft.AspNet.SignalR.Client
             // the server during negotiation.
             // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
             // topic along with the contained disconnect message.
-            _disconnectTimeoutOperation = SetTimeout(_disconnectTimeout, Disconnect);
+            _disconnectTimeoutOperation = SetTimeout(_disconnectTimeout, () => Disconnect());
 
 #if NETFX_CORE || PORTABLE
             // Clear the buffer
