@@ -595,7 +595,7 @@ namespace Microsoft.AspNet.SignalR.Client
                 // Dispose the heart beat monitor so we don't fire notifications when waiting to abort
                 _monitor.Dispose();
 
-                Disconnect();
+                Disconnect(timeout);
             }
         }
 
@@ -605,16 +605,23 @@ namespace Microsoft.AspNet.SignalR.Client
         /// </summary>
         void IConnection.Disconnect()
         {
+            Trace(TraceLevels.Messages, "Disconnect command received from server.");
+
             Disconnect(false);
         }
 
         private void Disconnect(bool notifyServer = true)
         {
+            Disconnect(DefaultAbortTimeout, false);
+        }
+
+        private void Disconnect(TimeSpan timeout, bool notifyServer = true)
+        {
             if (notifyServer)
             {
                 lock (_startLock)
                 {
-                    _transport.Abort(this, DefaultAbortTimeout, _connectionData);
+                    _transport.Abort(this, timeout, _connectionData);
                 }
             }
 
